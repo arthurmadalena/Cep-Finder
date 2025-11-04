@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/base.xhtml">
+    
+    <ui:define name="title">Gerenciar Usuários - CepFinder</ui:define>
+    
+    <ui:define name="content">
+        <h:form id="usuarioForm" prependId="false" rendered="#{loginBean.isAdmin}">
+            <div class="grid">
+                <div class="col-12">
+                    <div class="card" style="padding-top: 1rem;">
+                        <h5 style="margin-top: 0;">Gerenciar Usuários</h5>
+                        
+                        <p:growl for="growl" showDetail="true" showSummary="false">
+                            <p:autoUpdate/>
+                        </p:growl>
+                        
+                        <p:messages id="msgs" showDetail="true" showSummary="false" globalOnly="true" closable="false" styleClass="custom-messages">
+                            <p:autoUpdate/>
+                        </p:messages>
+
+                        <div class="ui-fluid formgrid grid">
+                            <div class="field col-9">
+                                <p:outputLabel value="Nome ou Usuário:"/>
+                                <p:inputText id="filtroNome"
+                                            value="#{usuarioBean.filtroNome}"
+                                            placeholder="Digite o nome ou usuário..."/>
+                            </div>
+                            
+                            <div class="field col-3">
+                                <p:outputLabel value="Status:"/>
+                                <p:selectOneMenu id="filtroAtivo" value="#{usuarioBean.filtroAtivo}">
+                                    <f:selectItem itemLabel="Todos" itemValue="#{null}"/>
+                                    <f:selectItem itemLabel="Ativos" itemValue="#{true}"/>
+                                    <f:selectItem itemLabel="Inativos" itemValue="#{false}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+
+                        <div class="grid col-12 mt-1" style="display: flex; justify-content: space-between; gap: 0.75rem;">
+                            <p:commandButton value="Limpar Filtros" icon="pi pi-filter-slash"
+                                           actionListener="#{usuarioBean.limparFiltros}"
+                                           update="usuarioForm"
+                                           process="@this"/>
+                            
+                            <div style="display: flex; gap: 0.75rem;">
+                                <p:commandButton value="Pesquisar" icon="pi pi-search"
+                                               id="btnPesquisar"
+                                               actionListener="#{usuarioBean.buscarTodos}"
+                                               update=":usuarioForm:pnlData"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="col-12">
+                    <div class="card">
+                        <p:outputPanel id="pnlData">
+                            <p:outputPanel rendered="#{usuarioBean.usuarios == null}"
+                                          styleClass="ui-messages avisoResult">
+                                <div class="ui-messages-info ui-corner-all">
+                                    <span class="ui-messages-info-icon"/>
+                                    <ul>
+                                        <li>
+                                            <span class="ui-messages-info-detail">
+                                                Clique em pesquisar para listar os usuários do sistema.
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </p:outputPanel>
+
+                            <p:dataTable id="dataUsuario"
+                                        var="usuario"
+                                        value="#{usuarioBean.usuarios}"
+                                        selectionMode="single"
+                                        selection="#{usuarioBean.usuarioSelecionado}"
+                                        rowKey="#{usuario.id}"
+                                        paginator="true"
+                                        paginatorAlwaysVisible="false"
+                                        paginatorPosition="bottom"
+                                        rows="15"
+                                        rendered="#{usuarioBean.usuarios != null}"
+                                        emptyMessage="Nenhum usuário encontrado."
+                                        reflow="true">
+
+                                <p:column headerText="Usuário" sortBy="#{usuario.username}" style="width:150px;">
+                                    <p:link styleClass="tableLink"
+                                           outcome="visualizar">
+                                        <h:outputText value="#{usuario.username}"/>
+                                        <f:param name="id" value="#{usuario.id}"/>
+                                    </p:link>
+                                </p:column>
+
+                                <p:column headerText="Nome Completo" sortBy="#{usuario.nomeCompleto}">
+                                    <h:outputText value="#{usuario.nomeCompleto}"/>
+                                </p:column>
+
+                                <p:column headerText="Email" sortBy="#{usuario.email}">
+                                    <h:outputText value="#{usuario.email}"/>
+                                </p:column>
+
+                                <p:column headerText="Permissões" style="width:200px;">
+                                    <h:outputText value="#{usuario.permissoes.toString().replace('[', '').replace(']', '')}"/>
+                                </p:column>
+
+                                <p:column headerText="Status" style="width:100px; text-align:center;">
+                                    <span class="status-badge #{usuario.ativo ? 'ativo' : 'inativo'}">
+                                        #{usuario.ativo ? 'Ativo' : 'Inativo'}
+                                    </span>
+                                </p:column>
+
+                                <p:column headerText="Email Verificado" style="width:120px; text-align:center;">
+                                    <i class="pi #{usuario.emailVerificado ? 'pi-check-circle' : 'pi-times-circle'}" 
+                                       style="color: #{usuario.emailVerificado ? '#4caf50' : '#f44336'}; font-size: 1.2rem;"></i>
+                                </p:column>
+
+                                <p:column headerText="Ações" style="width:150px; text-align:center;">
+                                    <p:commandButton icon="pi pi-#{usuario.ativo ? 'ban' : 'check'}"
+                                                   title="#{usuario.ativo ? 'Desativar' : 'Ativar'}"
+                                                   actionListener="#{usuarioBean.ativarDesativar(usuario)}"
+                                                   update=":usuarioForm:pnlData"
+                                                   styleClass="p-button-rounded p-button-text #{usuario.ativo ? 'p-button-warning' : 'p-button-success'}"
+                                                   disabled="#{usuario.username == 'admin'}"/>
+                                    
+                                    <p:commandButton icon="pi pi-key"
+                                                   title="Resetar Senha"
+                                                   action="#{usuarioBean.resetarSenha(usuario)}"
+                                                   styleClass="p-button-rounded p-button-text p-button-info"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+        
+        <h:form rendered="#{!loginBean.isAdmin}">
+            <div class="card">
+                <h5 style="color: #f44336;">Acesso Negado</h5>
+                <p>Você não tem permissão para acessar esta página.</p>
+                <p:commandButton value="Voltar ao Dashboard" 
+                                action="/pages/dashboard?faces-redirect=true" 
+                                icon="pi pi-arrow-left"
+                                styleClass="p-button-info"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/base.xhtml">
+    
+    <ui:define name="title">Dashboard - CEP Manager</ui:define>
+    
+    <ui:define name="content">
+        <p:messages showDetail="true" showSummary="false" closable="false" styleClass="custom-messages compact-message">
+            <p:autoUpdate/>
+        </p:messages>
+        
+        <div class="grid">
+            <div class="col-12">
+                <div class="card">
+                    <h5>Estatísticas</h5>
+                    
+                    <div class="grid">
+                        <div class="col-12 md:col-4">
+                            <div class="info-card">
+                                <i class="pi pi-map-marker" style="font-size: 2.5rem; color: #1976d2;"></i>
+                                <div>
+                                    <p class="info-label">Total de CEPs</p>
+                                    <h2 class="info-value">#{cepBean.totalCeps}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 md:col-4">
+                            <div class="info-card">
+                                <i class="pi pi-building" style="font-size: 2.5rem; color: #42a5f5;"></i>
+                                <div>
+                                    <p class="info-label">Cidades</p>
+                                    <h2 class="info-value">#{cepBean.totalCidades}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 md:col-4">
+                            <div class="info-card">
+                                <i class="pi pi-flag" style="font-size: 2.5rem; color: #64b5f6;"></i>
+                                <div>
+                                    <p class="info-label">Estados</p>
+                                    <h2 class="info-value">#{cepBean.totalEstados}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p:divider/>
+                    
+                    <h6 style="color: #1976d2; margin-bottom: 1rem;">CEPs por Estado</h6>
+                    
+                    <div class="estado-list">
+                        <ui:repeat value="#{cepBean.cepsPorEstado}" var="estado">
+                            <div class="estado-item">
+                                <div class="estado-info">
+                                    <span class="estado-uf">#{estado.key}</span>
+                                    <span class="estado-count">#{estado.value} CEP(s)</span>
+                                </div>
+                                <div class="estado-bar-container">
+                                    <div class="estado-bar" 
+                                         style="width: #{(estado.value / cepBean.maxCepsPorEstado) * 100}%">
+                                    </div>
+                                </div>
+                            </div>
+                        </ui:repeat>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+

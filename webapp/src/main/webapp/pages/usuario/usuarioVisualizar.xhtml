@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/base.xhtml">
+    
+    <ui:define name="title">Gerenciar Permissões - CepFinder</ui:define>
+    
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewParam name="id" value="#{usuarioBean.usuarioSelecionado.id}"/>
+            <f:event type="preRenderView" listener="#{usuarioBean.carregarUsuarioPorId(usuarioBean.usuarioSelecionado.id)}"/>
+        </f:metadata>
+        
+        <h:form id="permissaoForm" prependId="false">
+            <div class="card">
+                <h5 style="margin: 0 0 1.5rem 0; color: #1976d2; padding-bottom: 1rem; border-bottom: 2px solid #e3f2fd;">
+                    <i class="pi pi-shield" style="margin-right: 0.5rem;"></i>
+                    Gerenciar Permissões de Usuário
+                </h5>
+                
+                <p:messages id="msgs" showDetail="true" showSummary="false" closable="false" styleClass="custom-messages">
+                    <p:autoUpdate/>
+                </p:messages>
+                
+                <div class="ui-fluid formgrid grid">
+                    <div class="field col-6">
+                        <p:outputLabel value="Username:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText value="#{usuarioBean.usuarioSelecionado.username}"
+                                    disabled="true"
+                                    styleClass="input-readonly"/>
+                    </div>
+                    
+                    <div class="field col-6">
+                        <p:outputLabel value="Email:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText value="#{usuarioBean.usuarioSelecionado.email}"
+                                    disabled="true"
+                                    styleClass="input-readonly"/>
+                    </div>
+                    
+                    <div class="field col-6">
+                        <p:outputLabel value="Nome Completo:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText value="#{usuarioBean.usuarioSelecionado.nomeCompleto}"
+                                    disabled="true"
+                                    styleClass="input-readonly"/>
+                    </div>
+                    
+                    <div class="field col-3">
+                        <p:outputLabel value="Status:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText value="#{usuarioBean.usuarioSelecionado.ativo ? 'Ativo' : 'Inativo'}"
+                                    disabled="true"
+                                    styleClass="input-readonly"
+                                    style="color: #{usuarioBean.usuarioSelecionado.ativo ? '#4caf50' : '#f44336'}; font-weight: 600;"/>
+                    </div>
+                    
+                    <div class="field col-3">
+                        <p:outputLabel value="Email Verificado:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText value="#{usuarioBean.usuarioSelecionado.emailVerificado ? 'Sim' : 'Não'}"
+                                    disabled="true"
+                                    styleClass="input-readonly"
+                                    style="color: #{usuarioBean.usuarioSelecionado.emailVerificado ? '#4caf50' : '#f44336'}; font-weight: 600;"/>
+                    </div>
+                    
+                    <div class="field col-12">
+                        <p:outputLabel value="Permissões:" style="font-weight: 600; color: #1976d2; display: block; margin-bottom: 1rem;"/>
+                        
+                        <div class="grid">
+                            <ui:repeat value="#{usuarioBean.permissoesDisponiveis}" var="permissao">
+                                <div class="col-6">
+                                    <p:selectBooleanCheckbox value="#{usuarioBean.isPermissaoSelecionada(permissao)}"
+                                                            itemLabel="#{permissao}"
+                                                            style="margin-right: 0.5rem;">
+                                        <p:ajax listener="#{usuarioBean.togglePermissao(permissao)}" update="@none"/>
+                                    </p:selectBooleanCheckbox>
+                                    <span style="margin-left: 0.5rem; color: #495057;">
+                                        #{permissao}
+                                    </span>
+                                </div>
+                            </ui:repeat>
+                        </div>
+                        
+                        <div style="margin-top: 1rem; padding: 1rem; background: #e3f2fd; border-radius: 6px;">
+                            <p style="margin: 0; color: #1976d2; font-size: 0.9rem;">
+                                <i class="pi pi-info-circle" style="margin-right: 0.5rem;"></i>
+                                <strong>Permissões Disponíveis:</strong>
+                            </p>
+                            <ul style="margin: 0.5rem 0 0 1.5rem; color: #495057; font-size: 0.85rem;">
+                                <li><strong>USER:</strong> Acesso básico ao sistema</li>
+                                <li><strong>ADMIN:</strong> Acesso administrativo completo</li>
+                                <li><strong>CEP_CREATE:</strong> Criar novos CEPs</li>
+                                <li><strong>CEP_UPDATE:</strong> Atualizar CEPs existentes</li>
+                                <li><strong>CEP_DELETE:</strong> Excluir CEPs</li>
+                                <li><strong>USER_MANAGE:</strong> Gerenciar usuários</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <p:divider/>
+                
+                <div class="grid" style="margin-top: 1.5rem;">
+                    <div class="col-12" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                        <p:commandButton value="Voltar"
+                                       action="usuarioConsulta"
+                                       immediate="true"
+                                       icon="pi pi-arrow-left"
+                                       styleClass="p-button-secondary p-button-outlined"/>
+                        
+                        <p:commandButton value="Salvar Permissões"
+                                       action="#{usuarioBean.salvarPermissoes}"
+                                       icon="pi pi-check"
+                                       styleClass="p-button-success"/>
+                        
+                        <p:commandButton value="Excluir Usuário"
+                                       onclick="PF('confirmDeleteDialog').show();"
+                                       icon="pi pi-trash"
+                                       styleClass="p-button-danger"
+                                       rendered="#{usuarioBean.usuarioSelecionado.username != 'admin'}"/>
+                    </div>
+                </div>
+                
+                <p:confirmDialog widgetVar="confirmDeleteDialog"
+                                header="Confirmar Exclusão"
+                                message="Deseja realmente excluir este usuário? Esta ação não poderá ser desfeita."
+                                icon="pi pi-exclamation-triangle"
+                                severity="warn">
+                    <p:commandButton value="Sim, Excluir"
+                                   action="#{usuarioBean.excluir(usuarioBean.usuarioSelecionado.id)}"
+                                   oncomplete="PF('confirmDeleteDialog').hide();"
+                                   styleClass="p-button-danger"/>
+                    <p:commandButton value="Cancelar"
+                                   onclick="PF('confirmDeleteDialog').hide();"
+                                   styleClass="p-button-secondary"/>
+                </p:confirmDialog>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

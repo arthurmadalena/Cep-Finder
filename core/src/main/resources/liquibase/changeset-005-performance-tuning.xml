@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="005" author="Arthur Madalena">
+        <comment>Otimizações de performance e constraints adicionais</comment>
+
+        <!-- Adiciona constraint de validação para CEP (8 dígitos) -->
+        <sql>
+            ALTER TABLE cep ADD CONSTRAINT chk_cep_formato 
+            CHECK (LENGTH(codigo) = 8 AND codigo ~ '^[0-9]+$');
+        </sql>
+
+        <!-- Adiciona constraint para UF (2 caracteres maiúsculos) -->
+        <sql>
+            ALTER TABLE cep ADD CONSTRAINT chk_uf_formato 
+            CHECK (LENGTH(uf) = 2 AND uf = UPPER(uf));
+        </sql>
+
+        <!-- Adiciona constraint para código IBGE (7 dígitos) -->
+        <sql>
+            ALTER TABLE cep ADD CONSTRAINT chk_ibge_formato 
+            CHECK (ibge IS NULL OR (LENGTH(ibge) = 7 AND ibge ~ '^[0-9]+$'));
+        </sql>
+
+        <!-- Cria índice parcial para pesquisas case-insensitive -->
+        <sql>
+            CREATE INDEX idx_cep_logradouro_lower ON cep (LOWER(logradouro));
+        </sql>
+
+        <sql>
+            CREATE INDEX idx_cep_cidade_lower ON cep (LOWER(cidade));
+        </sql>
+
+        <sql>
+            CREATE INDEX idx_cep_bairro_lower ON cep (LOWER(bairro));
+        </sql>
+
+        <rollback>
+            <sql>ALTER TABLE cep DROP CONSTRAINT IF EXISTS chk_cep_formato;</sql>
+            <sql>ALTER TABLE cep DROP CONSTRAINT IF EXISTS chk_uf_formato;</sql>
+            <sql>ALTER TABLE cep DROP CONSTRAINT IF EXISTS chk_ibge_formato;</sql>
+            <sql>DROP INDEX IF EXISTS idx_cep_logradouro_lower;</sql>
+            <sql>DROP INDEX IF EXISTS idx_cep_cidade_lower;</sql>
+            <sql>DROP INDEX IF EXISTS idx_cep_bairro_lower;</sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
+

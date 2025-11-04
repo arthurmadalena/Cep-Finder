@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="003" author="Arthur Madalena">
+        <comment>Criação de índices adicionais para otimização de consultas (UF, Bairro, Cidade+UF)</comment>
+
+        <createIndex indexName="idx_cep_uf" tableName="cep">
+            <column name="uf"/>
+        </createIndex>
+
+        <createIndex indexName="idx_cep_cidade_uf" tableName="cep">
+            <column name="cidade"/>
+            <column name="uf"/>
+        </createIndex>
+
+        <createIndex indexName="idx_cep_bairro" tableName="cep">
+            <column name="bairro"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex indexName="idx_cep_uf" tableName="cep"/>
+            <dropIndex indexName="idx_cep_cidade_uf" tableName="cep"/>
+            <dropIndex indexName="idx_cep_bairro" tableName="cep"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
+

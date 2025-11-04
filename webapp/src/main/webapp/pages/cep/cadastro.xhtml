@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/base.xhtml">
+    
+    <ui:define name="title">#{cepBean.cepSelecionado.id == null ? 'Cadastrar' : 'Editar'} CEP - CEP Manager</ui:define>
+    
+    <ui:define name="content">
+        <h:form id="cadastroForm" prependId="false">
+            <div class="card">
+                <h5>
+                    <i class="pi pi-#{cepBean.cepSelecionado.id == null ? 'plus-circle' : 'pencil'}" style="margin-right: 0.5rem;"></i>
+                    #{cepBean.cepSelecionado.id == null ? 'Cadastrar Novo' : 'Editar'} CEP
+                </h5>
+                
+                <p:messages id="msgs" showDetail="true" showSummary="false" closable="false" styleClass="custom-messages">
+                    <p:autoUpdate/>
+                </p:messages>
+                
+                <div class="ui-fluid formgrid grid">
+                    <div class="field col-3">
+                        <p:outputLabel for="codigo" value="CEP: *" style="font-weight: 600;"/>
+                        <p:inputMask id="codigo"
+                                    value="#{cepBean.cepSelecionado.codigo}"
+                                    mask="99999-999"
+                                    placeholder="00000-000"
+                                    required="true"
+                                    requiredMessage="CEP é obrigatório"
+                                    disabled="#{cepBean.cepSelecionado.id != null}"/>
+                    </div>
+                    
+                    <div class="field col-9">
+                        <p:outputLabel for="logradouro" value="Logradouro: *" style="font-weight: 600;"/>
+                        <p:inputText id="logradouro"
+                                    value="#{cepBean.cepSelecionado.logradouro}"
+                                    placeholder="Digite o nome da rua, avenida..."
+                                    required="true"
+                                    requiredMessage="Logradouro é obrigatório"/>
+                    </div>
+                    
+                    <div class="field col-4">
+                        <p:outputLabel for="cidade" value="Cidade: *" style="font-weight: 600;"/>
+                        <p:inputText id="cidade"
+                                    value="#{cepBean.cepSelecionado.cidade}"
+                                    placeholder="Digite a cidade"
+                                    required="true"
+                                    requiredMessage="Cidade é obrigatória"/>
+                    </div>
+                    
+                    <div class="field col-4">
+                        <p:outputLabel for="bairro" value="Bairro: *" style="font-weight: 600;"/>
+                        <p:inputText id="bairro"
+                                    value="#{cepBean.cepSelecionado.bairro}"
+                                    placeholder="Digite o bairro"
+                                    required="true"
+                                    requiredMessage="Bairro é obrigatório"/>
+                    </div>
+                    
+                    <div class="field col-4">
+                        <p:outputLabel for="uf" value="UF: *" style="font-weight: 600;"/>
+                        <p:selectOneMenu id="uf"
+                                        value="#{cepBean.cepSelecionado.uf}"
+                                        required="true"
+                                        requiredMessage="UF é obrigatória">
+                            <f:selectItem itemLabel="Selecione..." itemValue="#{null}"/>
+                            <f:selectItem itemLabel="AC" itemValue="AC"/>
+                            <f:selectItem itemLabel="AL" itemValue="AL"/>
+                            <f:selectItem itemLabel="AP" itemValue="AP"/>
+                            <f:selectItem itemLabel="AM" itemValue="AM"/>
+                            <f:selectItem itemLabel="BA" itemValue="BA"/>
+                            <f:selectItem itemLabel="CE" itemValue="CE"/>
+                            <f:selectItem itemLabel="DF" itemValue="DF"/>
+                            <f:selectItem itemLabel="ES" itemValue="ES"/>
+                            <f:selectItem itemLabel="GO" itemValue="GO"/>
+                            <f:selectItem itemLabel="MA" itemValue="MA"/>
+                            <f:selectItem itemLabel="MT" itemValue="MT"/>
+                            <f:selectItem itemLabel="MS" itemValue="MS"/>
+                            <f:selectItem itemLabel="MG" itemValue="MG"/>
+                            <f:selectItem itemLabel="PA" itemValue="PA"/>
+                            <f:selectItem itemLabel="PB" itemValue="PB"/>
+                            <f:selectItem itemLabel="PR" itemValue="PR"/>
+                            <f:selectItem itemLabel="PE" itemValue="PE"/>
+                            <f:selectItem itemLabel="PI" itemValue="PI"/>
+                            <f:selectItem itemLabel="RJ" itemValue="RJ"/>
+                            <f:selectItem itemLabel="RN" itemValue="RN"/>
+                            <f:selectItem itemLabel="RS" itemValue="RS"/>
+                            <f:selectItem itemLabel="RO" itemValue="RO"/>
+                            <f:selectItem itemLabel="RR" itemValue="RR"/>
+                            <f:selectItem itemLabel="SC" itemValue="SC"/>
+                            <f:selectItem itemLabel="SP" itemValue="SP"/>
+                            <f:selectItem itemLabel="SE" itemValue="SE"/>
+                            <f:selectItem itemLabel="TO" itemValue="TO"/>
+                        </p:selectOneMenu>
+                    </div>
+                    
+                    <div class="field col-6">
+                        <p:outputLabel for="complemento" value="Complemento:"/>
+                        <p:inputText id="complemento"
+                                    value="#{cepBean.cepSelecionado.complemento}"
+                                    placeholder="Ex: até 100/200, lado par/ímpar..."/>
+                    </div>
+                    
+                    <div class="field col-6">
+                        <p:outputLabel for="ibge" value="Código IBGE:"/>
+                        <p:inputText id="ibge"
+                                    value="#{cepBean.cepSelecionado.ibge}"
+                                    placeholder="Digite o código IBGE"/>
+                    </div>
+                </div>
+                
+                <p:divider/>
+                
+                <div class="grid" style="margin-top: 1.5rem;">
+                    <div class="col-12" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                        <p:commandButton value="Voltar"
+                                       action="consulta"
+                                       immediate="true"
+                                       icon="pi pi-arrow-left"
+                                       styleClass="p-button-secondary"/>
+                        
+                        <p:commandButton value="Salvar"
+                                       action="#{cepBean.salvar}"
+                                       update="cadastroForm"
+                                       icon="pi pi-check"
+                                       styleClass="p-button-success"/>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/base.xhtml">
+    
+    <ui:define name="title">Visualizar CEP - CEP Manager</ui:define>
+    
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewParam name="id" value="#{cepBean.idSelecionado}"/>
+            <f:event type="preRenderView" listener="#{cepBean.carregarCepPorId}"/>
+        </f:metadata>
+        
+        <h:form id="visualizarForm" prependId="false">
+            <div class="card">
+                <h5 style="margin: 0 0 1.5rem 0; color: #1976d2; padding-bottom: 1rem; border-bottom: 2px solid #e3f2fd;">
+                    <i class="pi pi-eye" style="margin-right: 0.5rem;"></i>
+                    #{cepBean.modoEdicao ? 'Editar' : 'Visualizar'} CEP
+                </h5>
+                
+                <p:messages id="msgs" showDetail="true" showSummary="false" closable="false" styleClass="custom-messages">
+                    <p:autoUpdate/>
+                </p:messages>
+                
+                <div class="ui-fluid formgrid grid">
+                    <div class="field col-3">
+                        <p:outputLabel for="codigo" value="CEP:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputMask id="codigo"
+                                    value="#{cepBean.cepSelecionado.codigo}"
+                                    mask="99999-999"
+                                    disabled="true"
+                                    styleClass="input-readonly"/>
+                    </div>
+                    
+                    <div class="field col-9">
+                        <p:outputLabel for="logradouro" value="Logradouro:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText id="logradouro"
+                                    value="#{cepBean.cepSelecionado.logradouro}"
+                                    disabled="#{!cepBean.modoEdicao}"
+                                    required="#{cepBean.modoEdicao}"
+                                    requiredMessage="Logradouro é obrigatório"/>
+                    </div>
+                    
+                    <div class="field col-4">
+                        <p:outputLabel for="cidade" value="Cidade:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText id="cidade"
+                                    value="#{cepBean.cepSelecionado.cidade}"
+                                    disabled="#{!cepBean.modoEdicao}"
+                                    required="#{cepBean.modoEdicao}"
+                                    requiredMessage="Cidade é obrigatória"/>
+                    </div>
+                    
+                    <div class="field col-4">
+                        <p:outputLabel for="bairro" value="Bairro:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText id="bairro"
+                                    value="#{cepBean.cepSelecionado.bairro}"
+                                    disabled="#{!cepBean.modoEdicao}"
+                                    required="#{cepBean.modoEdicao}"
+                                    requiredMessage="Bairro é obrigatório"/>
+                    </div>
+                    
+                    <div class="field col-4">
+                        <p:outputLabel for="uf" value="UF:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:selectOneMenu id="uf"
+                                        value="#{cepBean.cepSelecionado.uf}"
+                                        disabled="#{!cepBean.modoEdicao}"
+                                        required="#{cepBean.modoEdicao}"
+                                        requiredMessage="UF é obrigatória">
+                            <f:selectItem itemLabel="Selecione..." itemValue="#{null}"/>
+                            <f:selectItem itemLabel="AC" itemValue="AC"/>
+                            <f:selectItem itemLabel="AL" itemValue="AL"/>
+                            <f:selectItem itemLabel="AP" itemValue="AP"/>
+                            <f:selectItem itemLabel="AM" itemValue="AM"/>
+                            <f:selectItem itemLabel="BA" itemValue="BA"/>
+                            <f:selectItem itemLabel="CE" itemValue="CE"/>
+                            <f:selectItem itemLabel="DF" itemValue="DF"/>
+                            <f:selectItem itemLabel="ES" itemValue="ES"/>
+                            <f:selectItem itemLabel="GO" itemValue="GO"/>
+                            <f:selectItem itemLabel="MA" itemValue="MA"/>
+                            <f:selectItem itemLabel="MT" itemValue="MT"/>
+                            <f:selectItem itemLabel="MS" itemValue="MS"/>
+                            <f:selectItem itemLabel="MG" itemValue="MG"/>
+                            <f:selectItem itemLabel="PA" itemValue="PA"/>
+                            <f:selectItem itemLabel="PB" itemValue="PB"/>
+                            <f:selectItem itemLabel="PR" itemValue="PR"/>
+                            <f:selectItem itemLabel="PE" itemValue="PE"/>
+                            <f:selectItem itemLabel="PI" itemValue="PI"/>
+                            <f:selectItem itemLabel="RJ" itemValue="RJ"/>
+                            <f:selectItem itemLabel="RN" itemValue="RN"/>
+                            <f:selectItem itemLabel="RS" itemValue="RS"/>
+                            <f:selectItem itemLabel="RO" itemValue="RO"/>
+                            <f:selectItem itemLabel="RR" itemValue="RR"/>
+                            <f:selectItem itemLabel="SC" itemValue="SC"/>
+                            <f:selectItem itemLabel="SP" itemValue="SP"/>
+                            <f:selectItem itemLabel="SE" itemValue="SE"/>
+                            <f:selectItem itemLabel="TO" itemValue="TO"/>
+                        </p:selectOneMenu>
+                    </div>
+                    
+                    <div class="field col-6">
+                        <p:outputLabel for="complemento" value="Complemento:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText id="complemento"
+                                    value="#{cepBean.cepSelecionado.complemento}"
+                                    disabled="#{!cepBean.modoEdicao}"/>
+                    </div>
+                    
+                    <div class="field col-6">
+                        <p:outputLabel for="ibge" value="Código IBGE:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText id="ibge"
+                                    value="#{cepBean.cepSelecionado.ibge}"
+                                    disabled="#{!cepBean.modoEdicao}"/>
+                    </div>
+                    
+                    <div class="field col-12 md:col-6" style="#{cepBean.cepSelecionado.datHoraCadastro != null ? '' : 'display:none;'}">
+                        <p:outputLabel value="Data de Cadastro:" style="font-weight: 600; color: #1976d2;"/>
+                        <h:outputText value="#{cepBean.cepSelecionado.datHoraCadastro}" 
+                                     style="display: block; padding: 0.75rem; background: #f5f5f5; border-radius: 4px;">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                    </div>
+                    
+                    <div class="field col-12 md:col-6" style="#{cepBean.cepSelecionado.datHoraAlteracao != null ? '' : 'display:none;'}">
+                        <p:outputLabel value="Última Alteração:" style="font-weight: 600; color: #1976d2;"/>
+                        <h:outputText value="#{cepBean.cepSelecionado.datHoraAlteracao}" 
+                                     style="display: block; padding: 0.75rem; background: #f5f5f5; border-radius: 4px;">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="America/Sao_Paulo"/>
+                        </h:outputText>
+                    </div>
+                </div>
+                
+                <p:divider/>
+                
+                <div class="grid" style="margin-top: 1.5rem;">
+                    <div class="col-12" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                        <p:commandButton value="Voltar"
+                                       action="consulta"
+                                       immediate="true"
+                                       icon="pi pi-arrow-left"
+                                       styleClass="p-button-secondary p-button-outlined"/>
+                        
+                        <p:commandButton value="#{cepBean.modoEdicao ? 'Cancelar' : 'Editar'}"
+                                       action="#{cepBean.toggleModoEdicao}"
+                                       update="visualizarForm"
+                                       icon="pi pi-#{cepBean.modoEdicao ? 'times' : 'pencil'}"
+                                       styleClass="#{cepBean.modoEdicao ? 'p-button-secondary' : 'p-button-info'}"/>
+                        
+                        <p:commandButton value="Salvar"
+                                       action="#{cepBean.salvar}"
+                                       update="visualizarForm"
+                                       icon="pi pi-check"
+                                       styleClass="p-button-success"
+                                       rendered="#{cepBean.modoEdicao}"/>
+                        
+                        <p:commandButton value="Excluir"
+                                       onclick="PF('confirmDeleteDialog').show();"
+                                       icon="pi pi-trash"
+                                       styleClass="p-button-danger"/>
+                    </div>
+                </div>
+                
+                <!-- Dialog de Confirmação de Exclusão -->
+                <p:confirmDialog widgetVar="confirmDeleteDialog"
+                                header="Confirmar Exclusão"
+                                message="Deseja realmente excluir este CEP? Esta ação não poderá ser desfeita."
+                                icon="pi pi-exclamation-triangle"
+                                severity="warn">
+                    <p:commandButton value="Sim, Excluir"
+                                   action="#{cepBean.excluirEVoltar}"
+                                   oncomplete="PF('confirmDeleteDialog').hide();"
+                                   styleClass="p-button-danger"/>
+                    <p:commandButton value="Cancelar"
+                                   onclick="PF('confirmDeleteDialog').hide();"
+                                   styleClass="p-button-secondary"/>
+                </p:confirmDialog>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="007" author="Arthur Madalena">
+        <comment>Insere usuários iniciais do sistema com permissões</comment>
+
+        <insert tableName="usuario">
+            <column name="id" valueSequenceNext="seq_usuario"/>
+            <column name="username" value="admin"/>
+            <column name="email" value="admin@cepfinder.com"/>
+            <column name="password" value="$2a$10$5I7yUZ.b7gm.RscZw4I0q.oH2Y/6Dg4c1kL5VNyknl6H/e0G21nBq"/>
+            <column name="nome_completo" value="Administrador do Sistema"/>
+            <column name="ativo" valueBoolean="true"/>
+            <column name="email_verificado" valueBoolean="true"/>
+            <column name="usuario_cadastro" value="sistema"/>
+        </insert>
+
+        <insert tableName="usuario">
+            <column name="id" valueSequenceNext="seq_usuario"/>
+            <column name="username" value="user"/>
+            <column name="email" value="user@cepfinder.com"/>
+            <column name="password" value="$2a$10$5I7yUZ.b7gm.RscZw4I0q.oH2Y/6Dg4c1kL5VNyknl6H/e0G21nBq"/>
+            <column name="nome_completo" value="Usuário Padrão"/>
+            <column name="ativo" valueBoolean="true"/>
+            <column name="email_verificado" valueBoolean="true"/>
+            <column name="usuario_cadastro" value="sistema"/>
+        </insert>
+
+        <insert tableName="usuario_permissao">
+            <column name="usuario_id" valueNumeric="1"/>
+            <column name="permissao" value="ROLE_ADMIN"/>
+        </insert>
+
+        <insert tableName="usuario_permissao">
+            <column name="usuario_id" valueNumeric="1"/>
+            <column name="permissao" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="usuario_permissao">
+            <column name="usuario_id" valueNumeric="2"/>
+            <column name="permissao" value="ROLE_USER"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="usuario_permissao">
+                <where>usuario_id IN (1, 2)</where>
+            </delete>
+            <delete tableName="usuario">
+                <where>username IN ('admin', 'user')</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

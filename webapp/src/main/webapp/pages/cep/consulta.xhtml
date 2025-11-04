@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/base.xhtml">
+    
+    <ui:define name="title">Consultar CEPs - CepFinder</ui:define>
+    
+    <ui:define name="content">
+        <h:form id="cepForm" prependId="false">
+            <div class="grid">
+                <div class="col-12">
+                    <div class="card" style="padding-top: 1rem;">
+                        <h5 style="margin-top: 0;">Consultar CEPs</h5>
+                        <p:growl for="growl" showDetail="true" showSummary="false">
+                            <p:autoUpdate/>
+                        </p:growl>
+                        <p:messages id="msgs" showDetail="true" showSummary="false" globalOnly="true" closable="false" styleClass="custom-messages">
+                            <p:autoUpdate/>
+                        </p:messages>
+
+                        <div class="ui-fluid formgrid grid">
+                            <div class="field col-3">
+                                <p:outputLabel>CEP:</p:outputLabel>
+                                <p:inputMask id="filtroCep"
+                                            value="#{cepBean.filtroCodigo}"
+                                            mask="99999-999"
+                                            placeholder="00000-000"/>
+                            </div>
+                            
+                            <div class="field col-9">
+                                <p:outputLabel value="Logradouro:"/>
+                                <p:inputText id="filtroLogradouro"
+                                            value="#{cepBean.filtroLogradouro}"
+                                            placeholder="Digite o nome da rua, avenida..."/>
+                            </div>
+                            
+                            <div class="field col-4">
+                                <p:outputLabel value="Cidade:"/>
+                                <p:inputText id="filtroCidade"
+                                            value="#{cepBean.filtroCidade}"
+                                            placeholder="Digite a cidade"/>
+                            </div>
+                            
+                            <div class="field col-4">
+                                <p:outputLabel value="Bairro:"/>
+                                <p:inputText id="filtroBairro"
+                                            value="#{cepBean.filtroBairro}"
+                                            placeholder="Digite o bairro"/>
+                            </div>
+                            
+                            <div class="field col-4">
+                                <p:outputLabel value="UF:"/>
+                                <p:selectOneMenu id="filtroUf" value="#{cepBean.filtroUf}">
+                                    <f:selectItem itemLabel="Todos" itemValue="#{null}"/>
+                                    <f:selectItem itemLabel="AC" itemValue="AC"/>
+                                    <f:selectItem itemLabel="AL" itemValue="AL"/>
+                                    <f:selectItem itemLabel="AM" itemValue="AM"/>
+                                    <f:selectItem itemLabel="AP" itemValue="AP"/>
+                                    <f:selectItem itemLabel="BA" itemValue="BA"/>
+                                    <f:selectItem itemLabel="CE" itemValue="CE"/>
+                                    <f:selectItem itemLabel="DF" itemValue="DF"/>
+                                    <f:selectItem itemLabel="ES" itemValue="ES"/>
+                                    <f:selectItem itemLabel="GO" itemValue="GO"/>
+                                    <f:selectItem itemLabel="MA" itemValue="MA"/>
+                                    <f:selectItem itemLabel="MG" itemValue="MG"/>
+                                    <f:selectItem itemLabel="MS" itemValue="MS"/>
+                                    <f:selectItem itemLabel="MT" itemValue="MT"/>
+                                    <f:selectItem itemLabel="PA" itemValue="PA"/>
+                                    <f:selectItem itemLabel="PB" itemValue="PB"/>
+                                    <f:selectItem itemLabel="PE" itemValue="PE"/>
+                                    <f:selectItem itemLabel="PI" itemValue="PI"/>
+                                    <f:selectItem itemLabel="PR" itemValue="PR"/>
+                                    <f:selectItem itemLabel="RJ" itemValue="RJ"/>
+                                    <f:selectItem itemLabel="RN" itemValue="RN"/>
+                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
+                                    <f:selectItem itemLabel="RR" itemValue="RR"/>
+                                    <f:selectItem itemLabel="RS" itemValue="RS"/>
+                                    <f:selectItem itemLabel="SC" itemValue="SC"/>
+                                    <f:selectItem itemLabel="SE" itemValue="SE"/>
+                                    <f:selectItem itemLabel="SP" itemValue="SP"/>
+                                    <f:selectItem itemLabel="TO" itemValue="TO"/>
+                                </p:selectOneMenu>
+                            </div>
+                            
+                            <div class="field col-12">
+                                <p:outputLabel value="Pesquisa Geral:"/>
+                                <p:inputText id="pesquisaGeral"
+                                            value="#{cepBean.pesquisaGeral}"
+                                            placeholder="Busque por qualquer informação..."/>
+                            </div>
+                        </div>
+
+                        <div class="grid col-12 mt-1" style="display: flex; justify-content: space-between; gap: 0.75rem;">
+                            <p:commandButton value="Limpar Filtros" icon="pi pi-filter-slash"
+                                           actionListener="#{cepBean.limparFiltros}"
+                                           update="cepForm"
+                                           process="@this"/>
+                            
+                            <div style="display: flex; gap: 0.75rem;">
+                                <p:commandButton value="Pesquisar" icon="pi pi-search"
+                                               id="btnPesquisar"
+                                               actionListener="#{cepBean.buscar}"
+                                               update=":cepForm:pnlData"/>
+
+                                <p:commandButton value="Cadastrar CEP" icon="pi pi-plus"
+                                               action="#{cepBean.novoCep}"
+                                               process="@this"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="col-12">
+                    <div class="card">
+                        <p:outputPanel id="pnlData">
+                            <p:outputPanel rendered="#{cepBean.ceps == null}"
+                                          styleClass="ui-messages avisoResult">
+                                <div class="ui-messages-info ui-corner-all">
+                                    <span class="ui-messages-info-icon"/>
+                                    <ul>
+                                        <li>
+                                            <span class="ui-messages-info-detail">
+                                                Clique em pesquisar após selecionar os filtros desejados para encontrar resultados.
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </p:outputPanel>
+
+                            <p:dataTable id="dataCep"
+                                        var="cep"
+                                        value="#{cepBean.ceps}"
+                                        selectionMode="single"
+                                        selection="#{cepBean.cepSelecionado}"
+                                        rowKey="#{cep.id}"
+                                        paginator="true"
+                                        paginatorAlwaysVisible="false"
+                                        paginatorPosition="bottom"
+                                        rows="15"
+                                        rendered="#{cepBean.ceps != null}"
+                                        emptyMessage="Nenhum CEP encontrado."
+                                        reflow="true">
+
+                                <p:column headerText="CEP" sortBy="#{cep.codigo}" style="width:125px;">
+                                    <p:link styleClass="tableLink"
+                                           outcome="visualizar">
+                                        <h:outputText value="#{cep.codigo}">
+                                            <f:converter converterId="cepConverter"/>
+                                        </h:outputText>
+                                        <f:param name="id" value="#{cep.id}"/>
+                                    </p:link>
+                                </p:column>
+
+                                <p:column headerText="Logradouro" sortBy="#{cep.logradouro}">
+                                    <h:outputText value="#{cep.logradouro}"/>
+                                </p:column>
+
+                                <p:column headerText="Complemento" style="width:150px;">
+                                    <h:outputText value="#{cep.complemento}"/>
+                                </p:column>
+
+                                <p:column headerText="Bairro" sortBy="#{cep.bairro}">
+                                    <h:outputText value="#{cep.bairro}"/>
+                                </p:column>
+
+                                <p:column headerText="Cidade" sortBy="#{cep.cidade}">
+                                    <h:outputText value="#{cep.cidade}"/>
+                                </p:column>
+
+                                <p:column headerText="UF" style="width:80px; text-align:center;">
+                                    <h:outputText value="#{cep.uf}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

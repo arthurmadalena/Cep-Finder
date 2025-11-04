@@ -1,0 +1,627 @@
+{
+	"info": {
+		"name": "CepFinder API - Colecao Completa",
+		"description": "Colecao completa da API CepFinder com todos os endpoints de autenticacao, usuarios e CEPs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/cep-manager",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Autenticacao",
+			"item": [
+				{
+					"name": "Login - Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('jwt_token', jsonData.token);",
+									"    pm.test('Token JWT capturado com sucesso', function () {",
+									"        pm.expect(jsonData.token).to.not.be.empty;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login - User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('jwt_token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "auth", "login"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Gerenciamento de Usuarios",
+			"item": [
+				{
+					"name": "Registro de Usuario",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"joao.silva\",\n    \"email\": \"joao.silva@example.com\",\n    \"password\": \"senha123\",\n    \"confirmPassword\": \"senha123\",\n    \"nomeCompleto\": \"Joao Silva\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/registro",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "registro"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar Email",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/verificar-email?token=SEU_TOKEN_AQUI",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "verificar-email"],
+							"query": [
+								{
+									"key": "token",
+									"value": "SEU_TOKEN_AQUI"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reenviar Email de Verificacao",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"joao.silva@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/reenviar-verificacao",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "reenviar-verificacao"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Usuarios (ADMIN)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/usuarios?page=0&size=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Usuario por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Usuario por Username (ADMIN)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/username/admin",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "username", "admin"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Usuario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin.atualizado@cepfinder.com\",\n    \"nomeCompleto\": \"Administrador Atualizado\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adicionar Permissao (ADMIN)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"permissao\": \"ROLE_GERENTE\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/2/permissoes",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "2", "permissoes"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Permissao (ADMIN)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/2/permissoes/ROLE_GERENTE",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "2", "permissoes", "ROLE_GERENTE"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar ou Desativar Usuario (ADMIN)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ativo\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/2/ativo",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "2", "ativo"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alterar Propria Senha",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"senhaAtual\": \"admin123\",\n    \"novaSenha\": \"novasenha123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/2/alterar-senha",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "2", "alterar-senha"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resetar Senha Usuario (ADMIN)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/resetar-senha",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "usuarios", "resetar-senha"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Gerenciamento de CEPs",
+			"item": [
+				{
+					"name": "Listar Todos os CEPs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ceps?page=0&size=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar CEP por Codigo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ceps/01310100",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps", "01310100"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar CEP por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ceps/id/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps", "id", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Novo CEP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"codigo\": \"01310100\",\n    \"logradouro\": \"Avenida Paulista\",\n    \"complemento\": \"lado impar\",\n    \"bairro\": \"Bela Vista\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"SP\",\n    \"ibge\": \"3550308\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/ceps",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar CEP",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"codigo\": \"01310100\",\n    \"logradouro\": \"Avenida Paulista - Atualizado\",\n    \"complemento\": \"lado impar\",\n    \"bairro\": \"Bela Vista\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"SP\",\n    \"ibge\": \"3550308\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/ceps",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar CEP",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ceps/01310100",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps", "01310100"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Buscas Especializadas de CEPs",
+			"item": [
+				{
+					"name": "Buscar por Logradouro",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ceps/logradouro/Paulista?page=0&size=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps", "logradouro", "Paulista"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por Cidade",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ceps/cidade/Sao Paulo?page=0&size=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps", "cidade", "Sao Paulo"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por Cidade e UF",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ceps/cidade/Sao Paulo/uf/SP?page=0&size=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps", "cidade", "Sao Paulo", "uf", "SP"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pesquisa Geral",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ceps/search?termo=Sao Paulo&page=0&size=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["cep-manager", "api", "ceps", "search"],
+							"query": [
+								{
+									"key": "termo",
+									"value": "Sao Paulo"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
+

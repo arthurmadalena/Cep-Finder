@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001-create-table-cep" author="Arthur Madalena">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="cep"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="cep">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="codigo" type="VARCHAR(8)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="logradouro" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="complemento" type="VARCHAR(100)"/>
+
+            <column name="bairro" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cidade" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="uf" type="CHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ibge" type="VARCHAR(7)"/>
+
+            <column name="dat_hora_cadastro" type="TIMESTAMP"/>
+
+            <column name="dat_hora_alteracao" type="TIMESTAMP"/>
+        </createTable>
+
+        <createIndex indexName="idx_cep_codigo" tableName="cep">
+            <column name="codigo"/>
+        </createIndex>
+
+        <createIndex indexName="idx_cep_logradouro" tableName="cep">
+            <column name="logradouro"/>
+        </createIndex>
+
+        <createIndex indexName="idx_cep_cidade" tableName="cep">
+            <column name="cidade"/>
+        </createIndex>
+
+        <rollback>
+            <dropTable tableName="cep"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
+

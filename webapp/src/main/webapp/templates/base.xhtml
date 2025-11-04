@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>
+        <ui:insert name="title">CEP Manager</ui:insert>
+    </title>
+    <h:outputStylesheet library="css" name="custom.css"/>
+    <ui:insert name="css"/>
+</h:head>
+<h:body>
+    <div class="layout-wrapper layout-static">
+        <!-- Topbar -->
+        <div class="layout-topbar">
+            <a href="#{request.contextPath}/pages/dashboard.xhtml" class="layout-topbar-logo">
+                <h:graphicImage library="images" name="iconCep.png" 
+                               style="width: 100px; height: auto; filter: brightness(0) invert(1);"/>
+                <span class="layout-topbar-logo-text">CepFinder</span>
+            </a>
+            
+            <div class="layout-topbar-menu">
+                <h:form>
+                    <p:commandButton icon="pi pi-sign-out" styleClass="p-button-rounded p-button-text" 
+                                   action="#{loginBean.logout}" title="Sair"/>
+                </h:form>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="layout-sidebar">
+            <div class="layout-menu">
+                <ul class="layout-menu-list">
+                    <li>
+                        <a href="#{request.contextPath}/pages/dashboard.xhtml">
+                            <i class="pi pi-chart-bar"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#{request.contextPath}/pages/cep/consulta.xhtml">
+                            <i class="pi pi-search"></i>
+                            <span>Consultar CEPs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#{request.contextPath}/pages/usuario/consulta.xhtml">
+                            <i class="pi pi-users"></i>
+                            <span>Gerenciar Usuários</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="layout-main-container">
+            <div class="layout-main">
+                <div class="grid">
+                    <div class="col-12">
+                        <ui:insert name="content"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>
+

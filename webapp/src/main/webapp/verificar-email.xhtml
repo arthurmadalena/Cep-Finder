@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+    <f:viewAction action="#{verificacaoBean.verificarEmail}"/>
+</f:metadata>
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Verificação de Email - CEP Manager</title>
+    <h:outputStylesheet library="css" name="custom.css"/>
+</h:head>
+<h:body styleClass="login-body">
+    <div class="login-panel">
+        <div class="login-panel-header">
+            <h:graphicImage library="images" name="iconCep.png" 
+                           styleClass="login-logo"/>
+            <h2>CepFinder</h2>
+            <p style="color: rgba(255,255,255,0.9); margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                Verificação de Email
+            </p>
+        </div>
+        
+        <div class="login-panel-content">
+            <p:messages id="messages" showDetail="true" showSummary="false" closable="true" styleClass="custom-messages">
+                <p:autoUpdate/>
+            </p:messages>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p:button value="Ir para Login" 
+                         outcome="/login"
+                         icon="pi pi-sign-in"
+                         styleClass="p-button-primary"
+                         style="width: 100%;"/>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>
+

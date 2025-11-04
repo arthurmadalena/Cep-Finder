@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login - CEP Manager</title>
+    <h:outputStylesheet library="css" name="custom.css"/>
+</h:head>
+<h:body styleClass="login-body">
+    <div class="login-panel">
+        <div class="login-panel-header">
+            <h:graphicImage library="images" name="iconCep.png" 
+                           styleClass="login-logo"/>
+            <h2>CepFinder</h2>
+            <p style="color: rgba(255,255,255,0.9); margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                Gerenciamento de CEPs
+            </p>
+        </div>
+        
+        <div class="login-panel-content">
+            <h:form id="loginForm">
+                <p:messages id="messages" showDetail="true" showSummary="false" closable="false" styleClass="custom-messages">
+                    <p:autoUpdate/>
+                </p:messages>
+                
+                <div class="field" style="margin-bottom: 1.5rem;">
+                    <label for="username" style="display: block; margin-bottom: 0.5rem; color: #495057; font-weight: 500;">
+                        <i class="pi pi-user" style="margin-right: 0.5rem; font-size: 1.1rem;"></i>Usuário
+                    </label>
+                    <p:inputText id="username" 
+                                value="#{loginBean.username}" 
+                                placeholder="Digite seu usuário"
+                                required="true"
+                                requiredMessage="Usuário é obrigatório"
+                                styleClass="login-input"/>
+                </div>
+                
+                <div class="field" style="margin-bottom: 1.5rem;">
+                    <label for="password" style="display: block; margin-bottom: 0.5rem; color: #495057; font-weight: 500;">
+                        <i class="pi pi-lock" style="margin-right: 0.5rem; font-size: 1.1rem;"></i>Senha
+                    </label>
+                    <p:password id="password" 
+                               value="#{loginBean.password}" 
+                               placeholder="Digite sua senha"
+                               feedback="false"
+                               toggleMask="true"
+                               required="true"
+                               requiredMessage="Senha é obrigatória"
+                               styleClass="login-input"/>
+                </div>
+                
+                <p:commandButton value="Entrar" 
+                                action="#{loginBean.login}"
+                                update="messages"
+                                icon="pi pi-sign-in"
+                                styleClass="p-button-primary"
+                                style="width: 100%; padding: 0.75rem; font-size: 1rem; font-weight: 600;"/>
+                
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <p style="color: #495057; margin-bottom: 0.75rem; font-size: 0.9rem;">Não tem uma conta?</p>
+                    <p:button value="Criar Conta" 
+                             outcome="pages/registro"
+                             icon="pi pi-user-plus"
+                             styleClass="p-button-outlined p-button-info"
+                             style="width: 100%;"/>
+                </div>
+                
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e0e0e0; text-align: center;">
+                    <p style="color: #6c757d; font-size: 0.875rem; margin: 0;">
+                        <strong>Usuários de teste:</strong>
+                    </p>
+                    <p style="color: #6c757d; font-size: 0.85rem; margin: 0.5rem 0 0 0;">
+                        admin / admin123 | user / admin123
+                    </p>
+                </div>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>
+

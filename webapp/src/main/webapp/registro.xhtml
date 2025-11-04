@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Registro - CepFinder</title>
+    <h:outputStylesheet library="css" name="custom.css"/>
+</h:head>
+<h:body styleClass="login-body">
+    <div class="login-panel">
+        <div class="login-panel-header">
+            <h:graphicImage library="images" name="iconCep.png" styleClass="login-logo"/>
+            <h2>CepFinder</h2>
+            <p style="margin: 0.5rem 0 0 0; color: white; font-size: 1rem;">Criar Nova Conta</p>
+        </div>
+        
+        <div class="login-panel-content">
+            <h:form id="registroForm" rendered="#{!registroBean.registroRealizado}">
+                <p:messages id="messages" showDetail="true" showSummary="false" closable="false" styleClass="custom-messages">
+                    <p:autoUpdate/>
+                </p:messages>
+                
+                <div class="field" style="margin-bottom: 1.25rem;">
+                    <label for="nomeCompleto" style="display: block; margin-bottom: 0.5rem; color: #495057; font-weight: 500;">
+                        <i class="pi pi-user" style="margin-right: 0.5rem;"></i>Nome Completo
+                    </label>
+                    <p:inputText id="nomeCompleto" 
+                                value="#{registroBean.nomeCompleto}" 
+                                required="true"
+                                requiredMessage="Nome completo é obrigatório"
+                                placeholder="Digite seu nome completo"
+                                styleClass="login-input"/>
+                </div>
+                
+                <div class="field" style="margin-bottom: 1.25rem;">
+                    <label for="username" style="display: block; margin-bottom: 0.5rem; color: #495057; font-weight: 500;">
+                        <i class="pi pi-at" style="margin-right: 0.5rem;"></i>Usuário
+                    </label>
+                    <p:inputText id="username" 
+                                value="#{registroBean.username}" 
+                                required="true"
+                                requiredMessage="Usuário é obrigatório"
+                                placeholder="Digite seu usuário"
+                                styleClass="login-input"/>
+                </div>
+                
+                <div class="field" style="margin-bottom: 1.25rem;">
+                    <label for="email" style="display: block; margin-bottom: 0.5rem; color: #495057; font-weight: 500;">
+                        <i class="pi pi-envelope" style="margin-right: 0.5rem;"></i>Email
+                    </label>
+                    <p:inputText id="email" 
+                                value="#{registroBean.email}" 
+                                required="true"
+                                requiredMessage="Email é obrigatório"
+                                validatorMessage="Email inválido"
+                                placeholder="seu@email.com"
+                                styleClass="login-input">
+                        <f:validateRegex pattern="^[A-Za-z0-9+_.-]+@(.+)$"/>
+                    </p:inputText>
+                </div>
+                
+                <div class="field" style="margin-bottom: 1.25rem;">
+                    <label for="password" style="display: block; margin-bottom: 0.5rem; color: #495057; font-weight: 500;">
+                        <i class="pi pi-lock" style="margin-right: 0.5rem;"></i>Senha
+                    </label>
+                    <p:password id="password" 
+                               value="#{registroBean.password}" 
+                               required="true"
+                               requiredMessage="Senha é obrigatória"
+                               feedback="true"
+                               placeholder="Digite sua senha"
+                               toggleMask="true"
+                               styleClass="login-input"/>
+                </div>
+                
+                <div class="field" style="margin-bottom: 1.5rem;">
+                    <label for="confirmPassword" style="display: block; margin-bottom: 0.5rem; color: #495057; font-weight: 500;">
+                        <i class="pi pi-lock" style="margin-right: 0.5rem;"></i>Confirmar Senha
+                    </label>
+                    <p:password id="confirmPassword" 
+                               value="#{registroBean.confirmPassword}" 
+                               required="true"
+                               requiredMessage="Confirmação de senha é obrigatória"
+                               feedback="false"
+                               placeholder="Confirme sua senha"
+                               toggleMask="true"
+                               styleClass="login-input"/>
+                </div>
+                
+                <p:commandButton value="Cadastrar" 
+                                action="#{registroBean.registrar}" 
+                                update="registroForm"
+                                icon="pi pi-user-plus"
+                                styleClass="p-button-primary"
+                                style="width: 100%; padding: 0.75rem; font-size: 1rem; margin-bottom: 1rem;"/>
+                
+                <p:commandButton value="Já tenho conta - Fazer Login" 
+                                action="#{registroBean.voltarLogin}" 
+                                icon="pi pi-arrow-left"
+                                styleClass="p-button-secondary p-button-outlined"
+                                style="width: 100%; padding: 0.75rem;"/>
+            </h:form>
+            
+            <div rendered="#{registroBean.registroRealizado}">
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="pi pi-check-circle" style="font-size: 4rem; color: #4caf50; margin-bottom: 1rem;"></i>
+                    <h3 style="color: #1976d2; margin-bottom: 1rem;">Cadastro Realizado!</h3>
+                    <p style="color: #666; margin-bottom: 1.5rem;">
+                        Enviamos um email de verificação para <strong>#{registroBean.email}</strong>.
+                        <br/>
+                        Clique no link do email para ativar sua conta.
+                    </p>
+                    
+                    <p:commandButton value="Reenviar Email" 
+                                    action="#{registroBean.reenviarEmail}" 
+                                    update="registroForm"
+                                    icon="pi pi-replay"
+                                    styleClass="p-button-info"
+                                    style="margin-right: 0.5rem;"/>
+                    
+                    <p:commandButton value="Voltar ao Login" 
+                                    action="#{registroBean.voltarLogin}" 
+                                    icon="pi pi-arrow-left"
+                                    styleClass="p-button-secondary"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>
+

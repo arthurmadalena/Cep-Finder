@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/base.xhtml">
+    
+    <ui:define name="title">Gerenciar Permissões - CepFinder</ui:define>
+    
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewParam name="id" value="#{usuarioBean.idSelecionado}"/>
+            <f:event type="preRenderView" listener="#{usuarioBean.carregarUsuarioPorId}"/>
+        </f:metadata>
+        
+        <h:form id="visualizarForm" prependId="false" rendered="#{loginBean.isAdmin}">
+            <div class="card">
+                <h5 style="margin: 0 0 1.5rem 0; color: #1976d2; padding-bottom: 1rem; border-bottom: 2px solid #e3f2fd;">
+                    <i class="pi pi-users" style="margin-right: 0.5rem;"></i>
+                    Gerenciar Usuário e Permissões
+                </h5>
+                
+                <p:messages id="msgs" showDetail="true" showSummary="false" closable="false" styleClass="custom-messages">
+                    <p:autoUpdate/>
+                </p:messages>
+                
+                <div class="ui-fluid formgrid grid">
+                    <div class="field col-4">
+                        <p:outputLabel for="username" value="Usuário:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText id="username"
+                                    value="#{usuarioBean.usuarioSelecionado.username}"
+                                    disabled="true"
+                                    styleClass="input-readonly"/>
+                    </div>
+                    
+                    <div class="field col-8">
+                        <p:outputLabel for="nomeCompleto" value="Nome Completo:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText id="nomeCompleto"
+                                    value="#{usuarioBean.usuarioSelecionado.nomeCompleto}"
+                                    required="true"
+                                    requiredMessage="Nome completo é obrigatório"/>
+                    </div>
+                    
+                    <div class="field col-8">
+                        <p:outputLabel for="email" value="Email:" style="font-weight: 600; color: #1976d2;"/>
+                        <p:inputText id="email"
+                                    value="#{usuarioBean.usuarioSelecionado.email}"
+                                    required="true"
+                                    requiredMessage="Email é obrigatório"/>
+                    </div>
+                    
+                    <div class="field col-2">
+                        <p:outputLabel value="Status:" style="font-weight: 600; color: #1976d2;"/>
+                        <div style="display: flex; align-items: center; height: 2.5rem; margin-top: -0.25rem;">
+                            <span class="status-badge #{usuarioBean.usuarioSelecionado.ativo ? 'ativo' : 'inativo'}">
+                                #{usuarioBean.usuarioSelecionado.ativo ? 'Ativo' : 'Inativo'}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="field col-2">
+                        <p:outputLabel value="Email Verificado:" style="font-weight: 600; color: #1976d2;"/>
+                        <div style="display: flex; align-items: center; justify-content: center; height: 2.5rem; margin-top: -0.25rem;">
+                            <i class="pi #{usuarioBean.usuarioSelecionado.emailVerificado ? 'pi-check-circle' : 'pi-times-circle'}" 
+                               style="color: #{usuarioBean.usuarioSelecionado.emailVerificado ? '#4caf50' : '#f44336'}; font-size: 1rem;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <p:divider/>
+                
+                <h6 style="color: #1976d2; margin-bottom: 1rem;">
+                    <i class="pi pi-shield" style="margin-right: 0.5rem;"></i>
+                    Permissões de Acesso
+                </h6>
+                
+                <p:outputPanel rendered="#{usuarioBean.permissoesNaoAtribuidas.size() > 0}">
+                    <div class="ui-fluid formgrid grid" style="margin-bottom: 1.5rem;">
+                        <div class="field col-9">
+                            <p:outputLabel value="Adicionar Permissão:"/>
+                            <p:selectOneMenu id="novaPermissao" value="#{usuarioBean.novaPermissao}">
+                                <f:selectItem itemLabel="Selecione uma permissão..." itemValue="#{null}"/>
+                                <f:selectItems value="#{usuarioBean.permissoesNaoAtribuidas}"/>
+                            </p:selectOneMenu>
+                        </div>
+                        
+                        <div class="field col-3" style="display: flex; align-items: flex-end;">
+                            <p:commandButton value="Adicionar" 
+                                           icon="pi pi-plus"
+                                           actionListener="#{usuarioBean.adicionarPermissao}"
+                                           update="visualizarForm"
+                                           styleClass="p-button-success"
+                                           style="width: 100%;"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                
+                <p:outputPanel rendered="#{usuarioBean.permissoesNaoAtribuidas.size() == 0}" 
+                              styleClass="ui-messages" 
+                              style="margin-bottom: 1.5rem;">
+                    <div class="ui-messages-info ui-corner-all" 
+                         style="display: flex; align-items: center; padding: 0.75rem 1rem; background: #e3f2fd; border: 1px solid #90caf9;">
+                        <span class="ui-messages-info-icon pi pi-info-circle" 
+                              style="font-size: 1.5rem; margin-right: 0.75rem; color: #1976d2;"></span>
+                        <span class="ui-messages-info-detail" style="color: #1976d2;">
+                            <strong>Todas as permissões já foram atribuídas!</strong><br/>
+                            Este usuário possui acesso completo ao sistema.
+                        </span>
+                    </div>
+                </p:outputPanel>
+                
+                <p:dataTable id="dataPermissoes"
+                            var="permissao"
+                            value="#{usuarioBean.usuarioSelecionado.permissoes.toArray()}"
+                            emptyMessage="Nenhuma permissão atribuída."
+                            styleClass="permissoes-table">
+                    
+                    <p:column headerText="Permissão" style="width:180px;">
+                        <h:outputText value="#{permissao}" style="font-weight: 600; color: #1976d2;"/>
+                    </p:column>
+                    
+                    <p:column headerText="Descrição">
+                        <div style="line-height: 1.5;">
+                            <div style="font-weight: 500; color: #333; margin-bottom: 0.25rem;">
+                                <h:outputText value="#{permissao == 'ROLE_ADMIN' ? 'Administrador do Sistema' : 
+                                                      permissao == 'ROLE_GERENTE' ? 'Gerente de CEPs' : 
+                                                      'Usuário Padrão'}"/>
+                            </div>
+                            <div style="font-size: 0.85rem; color: #666;">
+                                <h:outputText value="#{permissao == 'ROLE_ADMIN' ? 'Acesso total: gerenciar usuários, CEPs e todas as funcionalidades' : 
+                                                      permissao == 'ROLE_GERENTE' ? 'Gerenciar e editar CEPs, visualizar relatórios' : 
+                                                      'Consultar CEPs e visualizar informações básicas'}"
+                                             escape="false"/>
+                            </div>
+                        </div>
+                    </p:column>
+                    
+                    <p:column headerText="Ação" style="width:100px; text-align:center;">
+                        <p:commandButton icon="pi pi-trash"
+                                       title="Remover Permissão"
+                                       actionListener="#{usuarioBean.removerPermissao(permissao)}"
+                                       update="visualizarForm"
+                                       styleClass="p-button-rounded p-button-text p-button-danger"
+                                       disabled="#{permissao == 'ROLE_USER' and usuarioBean.usuarioSelecionado.permissoes.size() == 1}">
+                            <p:confirm header="Confirmar Remoção" 
+                                      message="Deseja realmente remover a permissão #{permissao}?" 
+                                      icon="pi pi-exclamation-triangle"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                
+                <p:confirmDialog global="true" showEffect="fade" width="425">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes p-button-danger"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no p-button-secondary"/>
+                </p:confirmDialog>
+                
+                <p:divider/>
+                
+                <div class="grid" style="margin-top: 1.5rem;">
+                    <div class="col-12" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                        <p:commandButton value="Voltar"
+                                       action="consulta"
+                                       immediate="true"
+                                       icon="pi pi-arrow-left"
+                                       styleClass="p-button-secondary p-button-outlined"/>
+                        
+                        <p:commandButton value="Salvar Alterações"
+                                       action="#{usuarioBean.salvarAlteracoes}"
+                                       update="visualizarForm"
+                                       icon="pi pi-check"
+                                       styleClass="p-button-success"/>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+        
+        <h:form rendered="#{!loginBean.isAdmin}">
+            <div class="card">
+                <h5 style="color: #f44336;">Acesso Negado</h5>
+                <p>Você não tem permissão para acessar esta página.</p>
+                <p:commandButton value="Voltar ao Dashboard" 
+                                action="/pages/dashboard?faces-redirect=true" 
+                                icon="pi pi-arrow-left"
+                                styleClass="p-button-info"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

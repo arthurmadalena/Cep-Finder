@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="008" author="Arthur Madalena">
+        <comment>Índices para tabela de usuários e otimização de autenticação</comment>
+
+        <createIndex indexName="idx_usuario_username" tableName="usuario" unique="true">
+            <column name="username"/>
+        </createIndex>
+
+        <createIndex indexName="idx_usuario_email" tableName="usuario" unique="true">
+            <column name="email"/>
+        </createIndex>
+
+        <createIndex indexName="idx_usuario_token_verificacao" tableName="usuario">
+            <column name="token_verificacao"/>
+        </createIndex>
+
+        <createIndex indexName="idx_usuario_ativo" tableName="usuario">
+            <column name="ativo"/>
+        </createIndex>
+
+        <createIndex indexName="idx_usuario_permissao_usuario_id" tableName="usuario_permissao">
+            <column name="usuario_id"/>
+        </createIndex>
+
+        <createIndex indexName="idx_usuario_permissao_permissao" tableName="usuario_permissao">
+            <column name="permissao"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex indexName="idx_usuario_username" tableName="usuario"/>
+            <dropIndex indexName="idx_usuario_email" tableName="usuario"/>
+            <dropIndex indexName="idx_usuario_token_verificacao" tableName="usuario"/>
+            <dropIndex indexName="idx_usuario_ativo" tableName="usuario"/>
+            <dropIndex indexName="idx_usuario_permissao_usuario_id" tableName="usuario_permissao"/>
+            <dropIndex indexName="idx_usuario_permissao_permissao" tableName="usuario_permissao"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

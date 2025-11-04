@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="002-insert-sample-data" author="Arthur Madalena">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM cep</sqlCheck>
+        </preConditions>
+
+        <insert tableName="cep">
+            <column name="codigo" value="01310100"/>
+            <column name="logradouro" value="Avenida Paulista"/>
+            <column name="bairro" value="Bela Vista"/>
+            <column name="cidade" value="São Paulo"/>
+            <column name="uf" value="SP"/>
+            <column name="ibge" value="3550308"/>
+            <column name="dat_hora_cadastro" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="cep">
+            <column name="codigo" value="20040020"/>
+            <column name="logradouro" value="Rua Primeiro de Março"/>
+            <column name="bairro" value="Centro"/>
+            <column name="cidade" value="Rio de Janeiro"/>
+            <column name="uf" value="RJ"/>
+            <column name="ibge" value="3304557"/>
+            <column name="dat_hora_cadastro" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="cep">
+            <column name="codigo" value="30130100"/>
+            <column name="logradouro" value="Avenida Afonso Pena"/>
+            <column name="bairro" value="Centro"/>
+            <column name="cidade" value="Belo Horizonte"/>
+            <column name="uf" value="MG"/>
+            <column name="ibge" value="3106200"/>
+            <column name="dat_hora_cadastro" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="cep">
+            <column name="codigo" value="40020000"/>
+            <column name="logradouro" value="Rua Chile"/>
+            <column name="bairro" value="Centro"/>
+            <column name="cidade" value="Salvador"/>
+            <column name="uf" value="BA"/>
+            <column name="ibge" value="2927408"/>
+            <column name="dat_hora_cadastro" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="cep">
+            <column name="codigo" value="80020190"/>
+            <column name="logradouro" value="Rua XV de Novembro"/>
+            <column name="bairro" value="Centro"/>
+            <column name="cidade" value="Curitiba"/>
+            <column name="uf" value="PR"/>
+            <column name="ibge" value="4106902"/>
+            <column name="dat_hora_cadastro" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="cep">
+                <where>codigo IN ('01310100', '20040020', '30130100', '40020000', '80020190')</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
+
