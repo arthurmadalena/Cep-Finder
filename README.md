@@ -337,7 +337,7 @@ webapp/
 - **GET** `/api/ceps/{codigo}`: Busca CEP por código
 - **GET** `/api/ceps/id/{id}`: Busca CEP por ID
 - **POST** `/api/ceps`: Cria novo CEP
-- **PUT** `/api/ceps/{codigo}`: Atualiza CEP existente
+- **PUT** `/api/ceps`: Atualiza CEP existente
 - **DELETE** `/api/ceps/{codigo}`: Remove CEP
 
 #### Buscas Especializadas
@@ -558,7 +558,7 @@ mvn test -X
 mvn clean install -DskipTests
 ```
 
-### Relatório de Cobertura (JaCoCo)
+### Relatório de Cobertura
 
 Para gerar relatório de cobertura de código:
 
@@ -802,14 +802,12 @@ Cada changeset tem um ID único e é executado apenas uma vez. O Liquibase mant�
 **Decisão**: Usar JSF para o frontend web por ser uma ferramenta de meu domínio e a qual pode ser bem utilizada com o framework Spring Boot, com auxílio de JoinFaces.
 
 **Justificativa**:
-- **Componentes Ricos**: PrimeFaces oferece componentes UI modernos
-- **Integração Spring**: JoinFaces integra perfeitamente JSF com Spring Boot
+- **Componentes**: PrimeFaces oferece componentes UI modernos
+- **Integração Spring**: JoinFaces integra JSF com Spring Boot
 - **Server-Side**: Lógica no servidor facilita manutenção
 - **Produtividade**: Desenvolvimento rápido de interfaces complexas
 
 ### Por que Paginação?
-
-**Decisão**: Implementar paginação em todas as listagens
 
 **Justificativa**:
 - **Performance**: Evita carregar grandes volumes de dados
@@ -999,8 +997,6 @@ Cada changeset tem um ID único e é executado apenas uma vez. O Liquibase mant�
 **Arquitetura**: Multi-Module Maven Project (Core + WebApp)
 
 **Testes**: 193 testes unitários (100% de cobertura das camadas principais)
-
-**Data**: Novembro de 2025
 
 ---
 
